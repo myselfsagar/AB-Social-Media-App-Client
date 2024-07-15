@@ -1,0 +1,37 @@
+.Feed {
+  .container {
+    display: flex;
+    gap: 20px;
+    // overflow: hidden;
+    // height: calc(100vh - 60px);
+
+    .left-part {
+      flex: 2;
+      padding-bottom: 20px;
+      //   overflow-y: auto;
+    }
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .left-part::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .left-part {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+
+    .right-part {
+      flex: 1;
+
+      .following,
+      .suggestions {
+        padding-block: 20px;
+        .title {
+          padding-bottom: 20px;
+        }
+      }
+    }
+  }
+}
