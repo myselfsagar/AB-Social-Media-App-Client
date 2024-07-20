@@ -47,10 +47,10 @@ const appConfigSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getMyInfo.fulfilled, (state, action) => {
-        state.myProfile = action.payload.user;
+        state.myProfile = action.payload?.user;
       })
       .addCase(updateMyProfile.fulfilled, (state, action) => {
-        state.myProfile = action.payload.user;
+        state.myProfile = action.payload?.user;
       });
   },
 });
