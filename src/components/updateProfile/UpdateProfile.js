@@ -2,7 +2,16 @@ import React, { useEffect, useState } from "react";
 import defaultUserImg from "../../assets/user.png";
 import "./UpdateProfile.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { updateMyProfile } from "../../redux/slices/appConfigSlice";
+import {
+  deleteMyProfile,
+  showToast,
+  updateMyProfile,
+} from "../../redux/slices/appConfigSlice";
+import { useNavigate } from "react-router-dom";
+import store from "../../redux/store";
+import { TOAST_SUCCESS } from "../../App";
+import { axiosClient } from "../../utils/axiosClient";
+import { KEY_ACCESS_TOKEN, removeItem } from "../../utils/localStorageManager";
 
 function UpdateProfile() {
   const myProfile = useSelector((state) => state.appConfigReducer.myProfile);
@@ -11,6 +20,7 @@ function UpdateProfile() {
   const [userImg, setUserImg] = useState("");
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setName(myProfile?.name || "");
@@ -41,14 +51,35 @@ function UpdateProfile() {
   }
 
   function handleSubmit(e) {
-    e.preventDefault();
-    dispatch(
-      updateMyProfile({
-        name,
-        bio,
-        userImg,
-      })
-    );
+    try {
+      e.preventDefault();
+      dispatch(
+        updateMyProfile({
+          name,
+          bio,
+          userImg,
+        })
+      );
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  }
+
+  async function handleDeleteProfile() {
+    try {
+      dispatch(deleteMyProfile());
+      store.dispatch(
+        showToast({
+          type: TOAST_SUCCESS,
+          message: "User profile deleted",
+        })
+      );
+      await axiosClient.post("/auth/logout");
+      removeItem(KEY_ACCESS_TOKEN);
+      navigate("/login");
+    } catch (e) {
+      return Promise.reject(e);
+    }
   }
 
   return (
@@ -95,7 +126,12 @@ function UpdateProfile() {
             />
           </form>
 
-          <button className="delete-account btn-primary">Delete Account</button>
+          <button
+            className="delete-account btn-primary"
+            onClick={handleDeleteProfile}
+          >
+            Delete Account
+          </button>
         </div>
       </div>
     </div>

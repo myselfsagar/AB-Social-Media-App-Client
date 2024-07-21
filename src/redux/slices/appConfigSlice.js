@@ -29,6 +29,17 @@ export const updateMyProfile = createAsyncThunk(
   }
 );
 
+export const deleteMyProfile = createAsyncThunk(
+  "user/deleteMyProfile",
+  async () => {
+    try {
+      await axiosClient.delete("/user/");
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  }
+);
+
 const appConfigSlice = createSlice({
   name: "appConfigSlice",
   initialState: {
